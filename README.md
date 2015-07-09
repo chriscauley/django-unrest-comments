@@ -1,5 +1,11 @@
-Django Mptt Comments
+Django Riot Comments
 ====================
+
+# VERY IMPORTANT
+
+This is a fork of django-mptt-comments that I want to turn into my own custom comment system. By the time I finish this it will not resemble django-mptt-comments in any way. I'm only doing this so that I can slowly merge my existing code into this. This repository is highly experimental and should be used by no one. That goes double for you, Tim.
+
+------------
 
 **Django Mptt Comments**  is a simple way to display threaded comments. It uses [django-mptt][mptt] to extend [django-contrib-comments][dcc] (*ex. django.contrib.comments*).
 
