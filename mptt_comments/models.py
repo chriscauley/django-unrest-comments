@@ -5,9 +5,8 @@ from django_comments.models import Comment
 from django.core import urlresolvers
 
 from mptt.models import MPTTModel
-from mptt_comments.managers import MpttCommentManager
 
-class AbstractMpttComment(MPTTModel, Comment):
+class MpttComment(MPTTModel, Comment):
 
     parent = models.ForeignKey('self', related_name='children', blank=True, null=True)
 
@@ -21,9 +20,4 @@ class AbstractMpttComment(MPTTModel, Comment):
         return "%s#c%s" % (tree_url, self.id)
 
     class Meta:
-        abstract = True
         ordering = ('tree_id', 'lft')
-
-class MpttComment(AbstractMpttComment):
-
-    objects = MpttCommentManager()
