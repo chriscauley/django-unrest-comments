@@ -5,103 +5,46 @@ Django Riot Comments
 
 This is a fork of django-mptt-comments that I want to turn into my own custom comment system. By the time I finish this it will not resemble django-mptt-comments in any way. I'm only doing this so that I can slowly merge my existing code into this. This repository is highly experimental and should be used by no one. That goes double for you, Tim.
 
-------------
+The story so far
+--------
 
-**Django Mptt Comments**  is a simple way to display threaded comments. It uses [django-mptt][mptt] to extend [django-contrib-comments][dcc] (*ex. django.contrib.comments*).
-
-*This fork contains some quick fixes to make it work with the Django 1.6 (and maybe 1.7).*
-
-Installation
-------------
+I don't know how to rename apps under the new django admin system (please help!), so for now we're just going to call this app mptt_comments to avoid nasty, manual migrations on my previous apps. So far the only database changes is removing the title field.
 
 #### Get the required third party modules
 
     pip install django-mptt
-    pip install django-template-utils
     pip install django-contrib-comments
 
 #### Add the needed apps to INSTALLED_APPS
 
     'django_comments',
-    'template_utils',
     'mptt',
     'mptt_comments'
-
-#### You may also need to configure MIDDLEWARE_CLASSES
-
-    MIDDLEWARE_CLASSES = (
-        'django.contrib.sessions.middleware.SessionMiddleware',
-        'django.middleware.common.CommonMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-        'django.contrib.auth.middleware.AuthenticationMiddleware',
-        'django.contrib.messages.middleware.MessageMiddleware',
-        'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    )
 
 #### Configure your root urls.py
 
     url(r'^comments/', include('mptt_comments.urls')),
-    url(r'^jsi18n/(?P<packages>\S+?)/$', 'django.views.i18n.javascript_catalog'),
 
 #### Set COMMENTS_APP variable in the settings.py
-
-Add following to your settings.py:
 
     COMMENTS_APP = 'mptt_comments'
 
 #### Add the required code to the objects detail page (see Usage)
 
-#### Copy the templates to adapt them for your site
+    <comment-list data-object_pk="{{ object.pk }}" data-content_type="course.course"></comment-list>
 
-#### Style the forms using css
+#### Add `_comment_media.html` and `riot.js` to your base template or only on the pages with comments (either way is fine)
 
-Example usage
--------------
+    <script src="//cdn.jsdelivr.net/g/riot@2.0.14(riot.min.js+compiler.min.js)"></script>
+    {% include "_comment_media.html" %}
 
-To display the toplevel tree in templates:
+Riot will now load comments on the fly via ajax any where there is a comment-list tag with the two data-attributes. Rock on \m/
 
-    {% load mptt_comments_tags %}
-    
-    {% block extrahead %}
-    {% include "comments/comments_media.html" %}
-    {% endblock extrahead %}
-    
-    {% block content %}
-    
-    {% if object %}
-      {% display_comment_toplevel_for object %}
-    {% endif %}
-    
-    {% endblock content %}
+Todo
+--------
 
-`object` is any model object instance you want attach comments to. Usage is uqual to [django-contrib-comments][dcc] (*django.contrib.comments*).
+- Add reddit style ranking system as well as a way to star comments (reddit gold?). This way we can accomodate thousand of comments and choose which one's to show at the top level.
 
-**Django-mptt-comments** uses jQuery for AJAX, you may need to add it to your template.
+- Add a flagging system - From what I could tell the flag system never actually worked in django-mptt-comments. This would be very userful.
 
-**Django-mptt-comments** can use [django-notification][ntf] for notifying users about replies, friends posts e.t.c. (see [mptt_comments/management.py](mptt_comments/management.py) for notification types supported).
-
-
-#### Pagination
-You can also use pagination in toplevel tree by adding this settings:
-
-    # Enable pagination (default: False)
-    MPTT_COMMENTS_PAGINATION = True
-    # Comments per page (default: 50)
-    MPTT_COMMENTS_PAGINATION_PAGE_LENGTH = 30
-
-#### Additional settings
-`MPTT_COMMENTS_OFFSET`: Number of comments displayed before "read more" link appears. Default: 20.
-
-`MPTT_COMMENTS_TOPLEVEL_OFFSET`: Default: 20.
-
-`MPTT_COMMENTS_CUTOFF`: Depth of comments to be shown. Default: 3.
-
-`MPTT_COMMENTS_COLLAPSE_ABOVE`: Default: 2.
-
-`MPTT_COMMENTS_COLLAPSE_BELOW_DETAIL`: Default: True.
-
-`MPTT_COMMENTS_SEND_NOTICES_FOR_NONPUBLIC`: Default: True.
-
-[mptt]: http://django-mptt.github.io/django-mptt/ "Django mptt documentation"
-[dcc]: http://django-contrib-comments.readthedocs.org/en/latest/ "Django comments documentation"
-[ntf]: http://django-notification.readthedocs.org/en/latest/ "Django-notification documentation"
+- incorporate DRF - Still not sure if DRF is actually the right way to go. Still it could be useful so that other people can modify this to suit their needs.
