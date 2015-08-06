@@ -13,7 +13,7 @@ class MpttComment(MPTTModel, Comment):
     def save(self, *a, **kw):
         if not self.ip_address:
             self.ip_address = '0.0.0.0'
-        super(AbstractMpttComment, self).save(*a, **kw)
+        super(MpttComment, self).save(*a, **kw)
 
     def get_absolute_url(self):
         tree_url = urlresolvers.reverse("comment-detail-tree", args=(self.tree_id, ))
