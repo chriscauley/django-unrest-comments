@@ -25,13 +25,8 @@
   collapse(e) {
     $(e.target).closest('comment').toggleClass('collapsed');
   }
-  /*reply(e) {
-    form = this.tags['comment-form']
-    this.form_data = form.data = 
-    form.update()
-  }*/
   function openForm(form_opts) {
-    form_opts.parent = that
+    form_opts.parent_node = that
     $(that.root).find(">.comment_form").html("<comment-form id='f"+that.pk+"'></comment-form>");
     riot.mount("#f"+that.pk,form_opts)
   }
@@ -56,6 +51,7 @@
   that.root.className = "comment_level_{ level } l{ l_mod } comment_expanded";
   that.root.id = "c{ pk }";
 </comment>
+
 <comment-form>
   <form action={ data.form_url } method="POST" class="comment_form_wrapper { loading && 'loading' }">
     <div class="comment_form">
@@ -116,15 +112,15 @@
   var that = this
   that.data = opts
   this.loading = false
-  this.parent = opts.parent
+  this.parent_node = opts.parent_node;
   cancel(e) {
     this.unmount()
   }
   submit(e) {
     this.loading = true
     function callback(data) {
-      if (that.parent.pk == data.pk) { // editing a comment
-        var comments = that.parent.parent.parent.comments
+      if (that.parent_node.pk == data.pk) { // editing a comment
+        var comments = that.parent_node.comments;
         for (var i=0;i<comments.length;i++) {
           if (comments[i].pk == data.pk) {
             comments.splice(i,1,data)
@@ -132,15 +128,14 @@
           }
         }
       } else { // new comment
-        that.parent.comments.splice(0,0,data)
+        that.parent_node.comments.splice(0,0,data)
         that.loading = false
       }
-      if (that.parent.pk) { that.unmount() }
+      if (that.parent_node.pk) { that.unmount() }
       else {
         that.loading = false
         setTimeout(function(){window.location = '#c'+data.pk},200)
-        console.log(that)
-        that.comment.value = ''
+        that.id_comment.value = ''
       }
       riot.update()
     }
@@ -153,6 +148,7 @@
     return false;
   }
 </comment-form>
+
 <comment-list>
   <h2>Comments</h2>
   <div class="alert alert-danger reply-warning" if={ comments }>
@@ -167,9 +163,12 @@
   this.comments = opts.comments;
   this.on('mount', function() {
     if (!window._USER_NUMBER) { return }
-    $(this.root).append($("<comment-form id='f0'></comment-form>"))
-    riot.mount('#f0',{
-      parent: this,
+    var form = document.createElement("comment-form");
+    form.id = "f0";
+    that = this;
+    this.root.appendChild(form)
+    riot.mount(form,'comment-form',{
+      parent_node: that,
       form_url: "/comments/post/",
       object_pk: opts['data-object_pk'],
       content_type: opts['data-content_type']
