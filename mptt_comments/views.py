@@ -13,7 +13,6 @@ import json, string
 def ajax_login_required(function):
   def wrap(request,*args,**kwargs):
     if not request.user.is_authenticated():
-      print request.user
       response = HttpResponse("Unauthorized: You must be logged in to do that.")
       response.status_code = 401
       return response
