@@ -121,11 +121,13 @@
     This way the comment author will receive a notification of your response.
   </div>
   <comment each={ comments }></comment>
-  <h2 class="section_title" if={ window._USER_NUMBER }>Post a new comment</h2>
   <div class="alert alert-warning" if={ !window._USER_NUMBER }>
     <a href="/accounts/login/?next={ window.location.pathname }">Login to leave a comment</a>
   </div>
-  <comment-form form_url="/comments/post/" object_pk={ object_pk } content_type={ content_type } form_id="f0"/>
+  <div if={ window._USER_NUMBER }>
+    <h2 class="section_title">Post a new comment</h2>
+    <comment-form form_url="/comments/post/" object_pk={ object_pk } content_type={ content_type } form_id="f0"/>
+  </div>
 
   this.comments = opts.comments;
   this.object_pk = opts.dataObject_pk;
