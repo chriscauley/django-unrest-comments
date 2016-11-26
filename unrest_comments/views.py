@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.template.defaultfilters import date
-from mptt_comments.models import MpttComment
+from unrest_comments.models import UnrestComment
 
 import json, string
 
@@ -27,7 +27,7 @@ def make_branch(a,level):
   }
 
 def build_comment_json(comment):
-  children = comment.get_children().order_by("-submit_date") # this should eventually be on MpttComment.Meta
+  children = comment.get_children().order_by("-submit_date") # this should eventually be on UnrestComment.Meta
   return {
     'pk': comment.pk,
     'comments': [build_comment_json(c) for c in children],
@@ -40,7 +40,7 @@ def build_comment_json(comment):
   }
 
 def detail(request,pk):
-  comment = get_object_or_404(MpttComment,pk=pk)
+  comment = get_object_or_404(UnrestComment,pk=pk)
   ct = comment.content_type
   x = dir(ct)
   d = build_comment_json(comment)
@@ -50,11 +50,11 @@ def detail(request,pk):
 
 def list_comments(request):
   natural_key = request.GET.get('content_type').split('.')
-  comments = MpttComment.objects.filter(
+  comments = UnrestComment.objects.filter(
     object_pk=request.GET['object_pk'],
     content_type=ContentType.objects.get_by_natural_key(*natural_key),
     parent=None
-  ).order_by("-submit_date") # this should eventually be on MpttComment.Meta
+  ).order_by("-submit_date") # this should eventually be on UnrestComment.Meta
   comments_json = [build_comment_json(c) for c in comments]
   return HttpResponse(json.dumps(comments_json))
 
@@ -63,7 +63,7 @@ def list_comments(request):
 def post(request):
   parent_pk = request.POST.get("parent_pk",None)
   if parent_pk:
-    parent = get_object_or_404(MpttComment,pk=parent_pk)
+    parent = get_object_or_404(UnrestComment,pk=parent_pk)
     content_type = parent.content_type
     object_pk = parent.object_pk
   else:
@@ -71,7 +71,7 @@ def post(request):
     natural_key = request.POST.get('content_type').split('.')
     content_type = ContentType.objects.get_by_natural_key(*natural_key)
     object_pk = request.POST.get('object_pk')
-  comment = MpttComment.objects.create(
+  comment = UnrestComment.objects.create(
     user=request.user,
     content_type=content_type,
     object_pk=object_pk,
@@ -84,7 +84,7 @@ def post(request):
 
 @ajax_login_required
 def edit(request,pk):
-  comment = get_object_or_deny(MpttComment,request.user,pk=pk)
+  comment = get_object_or_deny(UnrestComment,request.user,pk=pk)
   if request.POST:
     comment.comment = request.POST['comment']
     comment.save()
@@ -99,7 +99,7 @@ def get_object_or_deny(model,user_object,*args,**kwargs):
 #! TODO Not implimented
 @ajax_login_required
 def delete(request,pk):
-  comment = get_object_or_deny(MpttComment,user,pk=pk)
+  comment = get_object_or_deny(UnrestComment,user,pk=pk)
   comment.is_removed = True
   comment.save()
   HttpResponse("You have deleted this Comment.")
@@ -107,7 +107,7 @@ def delete(request,pk):
 #! TODO Not implimented
 @ajax_login_required
 def flag(request,pk):
-  comment = get_object_or_deny(MpttComment,user,pk=pk)
+  comment = get_object_or_deny(UnrestComment,user,pk=pk)
   comment.is_flagged = True
   comment.save()
   HttpResponse("This comment has been flagged and will be reviewed.")

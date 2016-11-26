@@ -6,7 +6,7 @@ from django_comments.models import Comment
 from django_comments.admin import CommentsAdmin
 from django.contrib.contenttypes.models import ContentType
 
-class MpttCommentsAdmin(CommentsAdmin):
+class UnrestCommentsAdmin(CommentsAdmin):
     fieldsets = (
         (None,
            {'fields': ('content_type', 'object_pk', 'parent', 'site')}
@@ -42,7 +42,7 @@ class MpttCommentsAdmin(CommentsAdmin):
     getobject.short_description = _('Object')
 
 try:
-	admin.site.unregister(Comment)
+  admin.site.unregister(Comment)
 except:
-	pass
-admin.site.register(get_model(), MpttCommentsAdmin)
+  pass
+admin.site.register(get_model(), UnrestCommentsAdmin)

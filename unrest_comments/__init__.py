@@ -19,22 +19,22 @@ if "relationships" in settings.INSTALLED_APPS:
 
 
 def get_model():
-    from mptt_comments.models import MpttComment
-    return MpttComment
+    from unrest_comments.models import UnrestComment
+    return UnrestComment
 
 def get_form():
-    from mptt_comments.forms import MpttCommentForm
-    return MpttCommentForm
+    from unrest_comments.forms import UnrestCommentForm
+    return UnrestCommentForm
 
 def get_form_target():
-    return urlresolvers.reverse("mptt_comments.views.post_comment")
+    return urlresolvers.reverse("unrest_comments.views.post_comment")
 
 def comment_callback_for_notification(sender, request=None, comment=None, **kwargs):
     if not notification:
         return
         
-    if not comment.is_public and not getattr(settings, 'MPTT_COMMENTS_SEND_NOTICES_FOR_NONPUBLIC', True):
-        # If comment is not public and MPTT_COMMENTS_SEND_NOTICES_FOR_NONPUBLIC is False, we don't
+    if not comment.is_public and not getattr(settings, 'UNREST_COMMENTS_SEND_NOTICES_FOR_NONPUBLIC', True):
+        # If comment is not public and UNREST_COMMENTS_SEND_NOTICES_FOR_NONPUBLIC is False, we don't
         # send the notifications at all.
         return
         
