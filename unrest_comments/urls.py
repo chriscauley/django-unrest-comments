@@ -1,11 +1,12 @@
 from django.conf.urls import url, patterns
 
-urlpatterns = patterns(
-  'mptt_comments.views',
-  url('^(\d+)/$','detail',name="comment-detail-tree"),
-  url('^list/$','list_comments'),
-  url('^post/$','post'),
-  url('^edit/(\d+)/$','edit'),
-  url('^delete/(\d+)/$','delete'),
-  url('^flag/(\d+)/$','flag'),
-)
+import views
+
+urlpatterns = [
+  url('^(\d+)/$', views.detail,name="comment-detail-tree"),
+  url('^list/$', views.list_comments),
+  url('^post/$', views.post),
+  url('^edit/(\d+)/$', views.edit),
+  url('^delete/(\d+)/$', views.delete),
+  url('^flag/(\d+)/$', views.flag),
+]
