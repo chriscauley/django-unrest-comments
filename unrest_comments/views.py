@@ -1,6 +1,5 @@
-#! in 1.7+ use from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.sites.models import get_current_site
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
