@@ -19,7 +19,7 @@ class UnrestCommentsAdmin(CommentsAdmin):
         )
      )
 
-    raw_id_fields = ('parent', 'user') # We don't really want to get huge <select> with all the comments, users...
+    readonly_fields = ("parent","content_type","object_pk","user","site","submit_date")
     list_display = ('user', 'getobject', 'level', 'submit_date')
     list_filter = ('submit_date', 'is_public', 'is_removed')
     date_hierarchy = None
