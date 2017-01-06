@@ -19,15 +19,16 @@ I don't know how to rename apps under the new django admin system (please help!)
 
     'django_comments',
     'mptt',
-    'mptt_comments'
+    'unrest_comments',
+    'django.contrib.sites', # If you aren't already using it, required for django_comments
 
 #### Configure your root urls.py
 
-    url(r'^comments/', include('mptt_comments.urls')),
+    url(r'^comments/', include('unrest_comments.urls')),
 
 #### Set COMMENTS_APP variable in the settings.py
 
-    COMMENTS_APP = 'mptt_comments'
+    COMMENTS_APP = 'unrest_comments'
 
 #### Add the required code to the objects detail page (see Usage)
 
@@ -35,7 +36,7 @@ I don't know how to rename apps under the new django admin system (please help!)
 
 #### Add `_comment_media.html` and `riot.js` to your base template or only on the pages with comments (either way is fine)
 
-    <script src="//cdn.jsdelivr.net/g/riot@2.0.14(riot.min.js+compiler.min.js)"></script>
+    <script src="https://cdn.jsdelivr.net/riot/2.5/riot+compiler.min.js"></script>
     {% include "_comment_media.html" %}
 
 Riot will now load comments on the fly via ajax any where there is a comment-list tag with the two data-attributes. Rock on \m/
