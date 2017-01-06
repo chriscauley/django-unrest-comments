@@ -1,3 +1,7 @@
+uR.auth.ready(function() {
+  riot.mount("comment-list");
+});
+
 <comment>
   <div class="comment_meta">
     <a href="javascript:;" onclick={ collapse } class="expand-link"></a>
@@ -7,13 +11,13 @@
   <div class="comment_content">{ comment }</div>
   <div class="comment_actions">
     <div if={ uR.auth.user}>
-      <a onclick={ reply } title="reply" href="#"><i class="fa fa-reply"></i> Post Reply</a>
+      <a onclick={ reply } title="reply" if={ uR.config.threaded_comments }><i class="fa fa-reply"></i> Post Reply</a>
       <!--| <a onclick="commentFlag({ pk });return false;" title="flag" href="#"><i class="fa fa-flag"></i> Flag</a>-->
       <a if={ user_pk == uR.auth.user.id } onclick={ edit } title="reply"
          href="#"><i class="fa fa-pencil"></i> Edit</a>
       <a if={ window._418 } href="/admin/mptt_comments/mpttcomment/{ pk }/delete/"><i class="fa fa-close"></i> Delete</a>
     </div>
-    <div if={ !uR.auth.user }>
+    <div if={ !uR.auth.user && uR.config.threaded_comments }>
       <a href="/accounts/login/?next={ window.location.pathname }">Login to reply to this comment</a>
     </div>
   </div>
@@ -59,18 +63,15 @@
   <form action={ opts.form_url } method="POST" class="comment_form_wrapper" id={ opts.form_id }>
     <div class="comment_form">
       <md-help></md-help>
-      <fieldset>
-        <ul class="list-unstyled">
-          <li class="required">
-            <textarea cols="40" id="id_comment" name="comment" rows="10">{ opts.comment }</textarea>
-            <input id="id_content_type" name="content_type" type="hidden" value={ opts.content_type } />
-            <input id="id_object_pk" name="object_pk" type="hidden" value={ opts.object_pk } />
-            <input id="id_parent_pk" name="parent_pk" type="hidden" value={ opts.parent_pk } />
-            <input id="id_comment_pk" name="comment_pk" type="hidden" value={ opts.pk } />
-          </li>
-        </ul>
-        <input type="submit" class="submit-post btn btn-primary" value="Post" onclick={ submit } />
-        <input type="submit" class="submit-post btn btn-danger" value="Cancel" onclick={ cancel } />
+      <div class={ uR.config.form.field_class }>
+      <textarea cols="40" class={ uR.theme.input } id="id_comment" name="comment"
+                rows="10">{ opts.comment }</textarea>
+      <input id="id_content_type" name="content_type" type="hidden" value={ opts.content_type } />
+      <input id="id_object_pk" name="object_pk" type="hidden" value={ opts.object_pk } />
+      <input id="id_parent_pk" name="parent_pk" type="hidden" value={ opts.parent_pk } />
+      <input id="id_comment_pk" name="comment_pk" type="hidden" value={ opts.pk } />
+      <input type="submit" class="submit-post { uR.config.btn_success }" value="Post" onclick={ submit } />
+      <input type="submit" class="submit-post { uR.config.btn_cancel }" value="Cancel" onclick={ cancel } />
       </fieldset>
     </div>
   </form>
@@ -111,7 +112,7 @@
 
 <comment-list>
   <h4>Comments</h4>
-  <div class="alert alert-danger reply-warning" if={ comments.length }>
+  <div class="alert alert-danger reply-warning" if={ comments.length && uR.config.threaded_comments }>
     If you want to respond to a comment, please click "Post Reply" underneath that comment.
     This way the comment author will receive a notification of your response.
   </div>
