@@ -1,0 +1,34 @@
+{
+  "name": "django-unrest-comments",
+  "version": "1.0.0",
+  "description": "Django Unrest Comments (not a js package, this is just for building static assets)",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chriscauley/django-unrest-comments"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chriscauley/django-unrest-comments/issues"
+  },
+  "homepage": "https://github.com/chriscauley/django-unrest-comments#readme",
+  "dependencies": {
+    "babel": "^6.5.2",
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-less": "^3.3.0",
+    "gulp-riot": "^1.0.2",
+    "gulp-rollup": "^2.5.1",
+    "gulp-sourcemaps": "^1.9.1",
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.7",
+    "rollup-plugin-babel": "^2.6.1",
+    "through2": "^2.0.3"
+  }
+}
