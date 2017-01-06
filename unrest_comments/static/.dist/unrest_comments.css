@@ -1,0 +1,109 @@
+comment-list,
+comment,
+comment-form,
+[riot-tag=comment-form] {
+  display: block;
+}
+comment-list {
+  max-width: 600px;
+}
+comment-list .comment_actions a {
+  border-left: 2px solid;
+  display: inline-block;
+  margin: 5px 0 0;
+  padding: 0 9px;
+}
+comment-list .comment_actions a:first-child {
+  border: 0;
+  padding-left: 0;
+}
+comment:target > .comment_outer {
+  background-color: lightcyan;
+  background-color: var(--target-comment-color);
+}
+h2.section_title {
+  font-size: 18px;
+  padding: 0 10px;
+}
+comment-list h2 {
+  margin: 20px 0 5px;
+}
+comment-list textarea {
+  height: 150px;
+  max-width: 100%;
+  width: 350px;
+}
+#mptt-comments-tree {
+  min-height: 20px;
+}
+comment-list comment {
+  border: 1px solid #e6e6e6;
+  border-left: solid 4px;
+  border-left-color: var(--border-color);
+  border-radius: 5px;
+  margin-bottom: 2px;
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+  padding-left: 0.5em;
+}
+comment-list comment comment:last-child {
+  margin-bottom: 0;
+}
+comment-list comment .comment_meta {
+  font-weight: bold;
+}
+comment-list comment.collapsed {
+  height: 34px;
+  overflow: hidden;
+}
+comment-list comment.collapsed comment {
+  display: none;
+}
+comment-list comment.collapsed .expand-link:before {
+  content: "[+]";
+}
+comment-list comment .expand-link:before {
+  content: "[-]";
+  font-weight: normal;
+  font-family: monospace;
+}
+comment-list comment a {
+  text-decoration: none;
+  cursor: pointer;
+}
+comment-list comment.l0 {
+  background: #f8f8f8;
+}
+comment-list comment.l1 {
+  background: white;
+}
+comment-list comment .comment_content:empty:before {
+  background: rgba(255, 255, 255, 0.3);
+  border: .5em dashed;
+  border-color: var(--border-color);
+  content: "THIS COMMENT INTENTIONALLY LEFT BLANK";
+  display: block;
+  height: 5em;
+  line-height: 4em;
+  opacity: 0.75;
+  text-align: center;
+  width: 100%;
+}
+comment-form .md,
+[riot-tag=comment-form] .md {
+  display: none;
+  margin-bottom: 20px;
+}
+comment-form .md.show,
+[riot-tag=comment-form] .md.show {
+  display: block;
+}
+comment-form .md tr,
+[riot-tag=comment-form] .md tr {
+  border: 1px gray solid;
+  border-left: 0;
+}
+comment-form .md td,
+[riot-tag=comment-form] .md td {
+  border-left: 1px gray solid;
+}
