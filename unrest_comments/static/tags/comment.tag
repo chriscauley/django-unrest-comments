@@ -56,7 +56,7 @@
 </comment>
 
 <comment-form>
-  <form action={ opts.form_url } method="POST" class="comment_form_wrapper { loading: loading }" id={ opts.form_id }>
+  <form action={ opts.form_url } method="POST" class="comment_form_wrapper" id={ opts.form_id }>
     <div class="comment_form">
       <md-help></md-help>
       <fieldset>
@@ -74,43 +74,38 @@
       </fieldset>
     </div>
   </form>
-  var that = this;
-  that.parent = that.parent || that.opts.parent;
-  this.loading = false;
+  var self = this;
+  self.parent = self.parent || self.opts.parent;
   cancel(e) {
     this.unmount();
   }
   this.on("mount",function() { this.update() });
   submit(e) {
-    this.loading = true;
-    $.post(
-      this.opts.form_url,
-      $(this.root).find('form').serializeArray(),
-      function callback(data) {
-        if (that.parent.pk == data.pk) { // editing a comment
-          var comments = that.parent.parent.comments;
+    uR.ajax({
+      url: this.opts.form_url,
+      form: this.root.querySelector("form"),
+      that: this,
+      success: function callback(data) {
+        if (self.parent.pk == data.pk) { // editing a comment
+          var comments = self.parent.parent.comments;
           for (var i=0;i<comments.length;i++) {
             if (comments[i].pk == data.pk) {
               comments.splice(i,1,data);
-              that.parent.parent.update();
+              self.parent.parent.update();
               break;
             }
           }
         } else { // new comment
-          that.parent.comments.splice(0,0,data);
-          that.loading = false;
-          that.parent.update()
+          self.parent.comments.splice(0,0,data);
+          self.parent.update()
         }
-        if (that.parent.pk) { that.unmount(); that.parent.update() }
+        if (self.parent.pk) { self.unmount(); self.parent.update() }
         else {
-          that.loading = false;
           setTimeout(function() { window.location = '#c'+data.pk }, 200);
-          that.id_comment.value = '';
+          self.id_comment.value = '';
         }
-      },
-      "json"
-    )
-    return false;
+      }
+    });
   }
 </comment-form>
 
@@ -126,12 +121,23 @@
   </div>
   <div if={ uR.auth.user }>
     <h5 class="section_title">Post a new comment</h5>
-    <comment-form form_url="/comments/post/" object_pk={ object_pk } content_type={ content_type } form_id="f0"/>
+    <comment-form form_url="/comments/post/" object_pk={ opts.object_pk } content_type={ opts.content_type }
+                  form_id="f0"/>
   </div>
 
-  this.comments = opts.comments;
-  this.object_pk = opts.dataObject_pk;
-  this.content_type = opts.dataContent_type;
+  var self = this;
+  this.on("mount",function() {
+    uR.ajax({
+      url: "/comments/list/",
+      data: this.opts,
+      that: this,
+      success: function(data) {
+        self.comments = data;
+        self.form_url = "/comments/post/";
+      },
+    });
+  });
+
 </comment-list>
 
 <md-help>
