@@ -32,14 +32,15 @@ I don't know how to rename apps under the new django admin system (please help!)
 
 #### Add the required code to the objects detail page (see Usage)
 
-    <comment-list data-object_pk="{{ object.pk }}" data-content_type="course.course"></comment-list>
+    <comment-list object_pk="{{ object.pk }}" content_type="course.course"></comment-list>
 
-#### Add `_comment_media.html` and `riot.js` to your base template or only on the pages with comments (either way is fine)
+#### Add `comments.tag`, `unrest.js`, and `riot.js` to your base template or only on the pages with comments (either way is fine)
 
     <script src="https://cdn.jsdelivr.net/riot/2.5/riot+compiler.min.js"></script>
-    {% include "_comment_media.html" %}
+    <script src="{{ STATIC_URL }}unrest_comments/unrest.js"></script>
+    <script src="{{ STATIC_URL }}unrest_comments/comments.tag" type="riot/tag"></script>
 
-Riot will now load comments on the fly via ajax any where there is a comment-list tag with the two data-attributes. Rock on \m/
+Riot will now load comments on the fly via ajax any where there is a comment-list tag with the two attributes. Rock on \m/
 
 Todo
 --------

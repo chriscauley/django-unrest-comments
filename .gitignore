@@ -1,2 +1,5 @@
 *.pyc
 *~
+
+unrest_comments/node_modules/*
+unrest_comments/static/.dist/*

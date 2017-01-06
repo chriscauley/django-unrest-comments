@@ -1,6 +1,6 @@
-from django.conf.urls import url, patterns
+from django.conf.urls import url
 
-import views
+from unrest_comments import views
 
 urlpatterns = [
   url('^(\d+)/$', views.detail,name="comment-detail-tree"),
