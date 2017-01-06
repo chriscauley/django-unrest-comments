@@ -6,14 +6,14 @@
   </div>
   <div class="comment_content">{ comment }</div>
   <div class="comment_actions">
-    <div if={ window._USER_NUMBER}>
+    <div if={ uR.auth.user}>
       <a onclick={ reply } title="reply" href="#"><i class="fa fa-reply"></i> Post Reply</a>
       <!--| <a onclick="commentFlag({ pk });return false;" title="flag" href="#"><i class="fa fa-flag"></i> Flag</a>-->
-      <a if={ user_pk == window._USER_NUMBER } onclick={ edit } title="reply"
+      <a if={ user_pk == uR.auth.user.id } onclick={ edit } title="reply"
          href="#"><i class="fa fa-pencil"></i> Edit</a>
       <a if={ window._418 } href="/admin/mptt_comments/mpttcomment/{ pk }/delete/"><i class="fa fa-close"></i> Delete</a>
     </div>
-    <div if={ !window._USER_NUMBER }>
+    <div if={ !uR.auth.user }>
       <a href="/accounts/login/?next={ window.location.pathname }">Login to reply to this comment</a>
     </div>
   </div>
@@ -115,17 +115,17 @@
 </comment-form>
 
 <comment-list>
-  <h2>Comments</h2>
+  <h4>Comments</h4>
   <div class="alert alert-danger reply-warning" if={ comments.length }>
     If you want to respond to a comment, please click "Post Reply" underneath that comment.
     This way the comment author will receive a notification of your response.
   </div>
   <comment each={ comments }></comment>
-  <div class="alert alert-warning" if={ !window._USER_NUMBER }>
+  <div class="alert alert-warning" if={ !uR.auth.user }>
     <a href="/accounts/login/?next={ window.location.pathname }">Login to leave a comment</a>
   </div>
-  <div if={ window._USER_NUMBER }>
-    <h2 class="section_title">Post a new comment</h2>
+  <div if={ uR.auth.user }>
+    <h5 class="section_title">Post a new comment</h5>
     <comment-form form_url="/comments/post/" object_pk={ object_pk } content_type={ content_type } form_id="f0"/>
   </div>
 
@@ -136,43 +136,50 @@
 
 <md-help>
   <p>Comments are displayed using Markdown.</p>
-  <a href="javascript:;" onclick="$(this).next().toggle()">Show Formatting help</a>
-  <table class="md" cellpadding="3">
-    <tbody>
-      <tr style="background-color: #ffff99; text-align: center">
-        <td><em>you type:</em></td>
-        <td><em>you see:</em></td>
-      </tr>
-      <tr>
-        <td>*italics*</td>
-        <td><em>italics</em></td>
-      </tr>
-      <tr>
-        <td>**bold**</td>
-        <td><b>bold</b></td>
-      </tr>
-      <tr>
-        <td>[txrx!](http://txrxlabs.org)</td>
-        <td><a href="http://txrxlabs.org">txrx!</a></td>
-      </tr>
-      <tr>
-        <td>http://txrxlabs.org</td>
-        <td><a href="http://txrxlabs.org">http://txrxlabs.org</a></td>
-      </tr>
-      <tr>
-        <td>* item 1<br>* item 2<br>* item 3</td>
-        <td><ul><li>item 1</li><li>item 2</li><li>item 3</li></ul></td>
-      </tr>
-      <tr>
-        <td>&gt; quoted text</td>
-        <td><blockquote>quoted text</blockquote></td>
-      </tr>
-      <tr>
-        <td>Lines starting with four spaces<br>are treated like code:<br><br><span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>if 1 * 2 &lt; 3:<br><span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>print "hello, world!"<br></td>
-        <td>Lines starting with four spaces<br>are treated like code:<br><pre>if 1 * 2 &lt; 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;print "hello, world!"</pre></td>
-      </tr>
-    </tbody>
-  </table>
+  <a href="javascript:;" onclick={ toggle }>Show/hide Formatting help</a>
+  <div class="markdown-table" style="overflow: hidden; max-height: 0">
+    <table class="md-help" cellpadding="3">
+      <tbody>
+        <tr>
+          <th><em>you type:</em></th>
+          <th><em>you see:</em></th>
+        </tr>
+        <tr>
+          <td>*italics*</td>
+          <td><em>italics</em></td>
+        </tr>
+        <tr>
+          <td>**bold**</td>
+          <td><b>bold</b></td>
+        </tr>
+        <tr>
+          <td>[txrx!](http://txrxlabs.org)</td>
+          <td><a href="http://txrxlabs.org">txrx!</a></td>
+        </tr>
+        <tr>
+          <td>http://txrxlabs.org</td>
+          <td><a href="http://txrxlabs.org">http://txrxlabs.org</a></td>
+        </tr>
+        <tr>
+          <td>* item 1<br>* item 2<br>* item 3</td>
+          <td><ul><li>item 1</li><li>item 2</li><li>item 3</li></ul></td>
+        </tr>
+        <tr>
+          <td>&gt; quoted text</td>
+          <td><blockquote>quoted text</blockquote></td>
+        </tr>
+        <tr>
+          <td>Lines starting with four spaces<br>are treated like code:<br><br><span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>if 1 * 2 &lt; 3:<br><span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>print "hello, world!"<br></td>
+          <td>Lines starting with four spaces<br>are treated like code:<br><pre>if 1 * 2 &lt; 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;print "hello, world!"</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
+  toggle(e) {
+    this.visible = !this.visible;
+    var table = this.root.querySelector(".markdown-table");
+    table.style.maxHeight = this.visible?table.scrollHeight+"px":0;
+  }
 </md-help>
 
