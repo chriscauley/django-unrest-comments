@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.template.defaultfilters import date
@@ -18,12 +18,6 @@ def ajax_login_required(function):
     return function(request,*args,**kwargs)
   wrap.csrf_exempt = True
   return wrap
-
-def make_branch(a,level):
-  return {
-    'letter': a,
-    'extras': [make_branch(l,level-1) for l in string.digits[:2] if level > 0],
-  }
 
 def build_comment_json(comment):
   children = comment.get_children().order_by("-submit_date") # this should eventually be on UnrestComment.Meta
@@ -45,7 +39,7 @@ def detail(request,pk):
   d = build_comment_json(comment)
   d['content_type'] = "%s.%s"%(ct.app_label,ct.name)
   d['object_pk'] = comment.object_pk
-  return HttpResponse(json.dumps(d))
+  return JsonResponse(d)
 
 def list_comments(request):
   natural_key = request.GET.get('content_type').split('.')
@@ -55,7 +49,7 @@ def list_comments(request):
     parent=None
   ).order_by("-submit_date") # this should eventually be on UnrestComment.Meta
   comments_json = [build_comment_json(c) for c in comments]
-  return HttpResponse(json.dumps(comments_json))
+  return JsonResponse(comments_json,safe=False)
 
 #! TODO most of this function should be a shared form with edit
 @ajax_login_required
@@ -79,7 +73,7 @@ def post(request):
     site=get_current_site(request),
     ip_address=request.META.get("REMOTE_ADDR", None),
   )
-  return HttpResponse(json.dumps(build_comment_json(comment)))
+  return JsonResponse(build_comment_json(comment))
 
 @ajax_login_required
 def edit(request,pk):
@@ -87,7 +81,7 @@ def edit(request,pk):
   if request.POST:
     comment.comment = request.POST['comment']
     comment.save()
-  return HttpResponse(json.dumps(build_comment_json(comment)))
+  return JsonResponse(build_comment_json(comment))
 
 def get_object_or_deny(model,user_object,*args,**kwargs):
   obj = get_object_or_404(model,*args,**kwargs)
@@ -101,7 +95,7 @@ def delete(request,pk):
   comment = get_object_or_deny(UnrestComment,user,pk=pk)
   comment.is_removed = True
   comment.save()
-  HttpResponse("You have deleted this Comment.")
+  JsonResponse({'message': "You have deleted this Comment."})
 
 #! TODO Not implimented
 @ajax_login_required
@@ -109,4 +103,4 @@ def flag(request,pk):
   comment = get_object_or_deny(UnrestComment,user,pk=pk)
   comment.is_flagged = True
   comment.save()
-  HttpResponse("This comment has been flagged and will be reviewed.")
+  JsonResponse({'message': "This comment has been flagged and will be reviewed."})
