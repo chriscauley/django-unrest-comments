@@ -7,8 +7,6 @@ from django.template.response import TemplateResponse
 from django.template.defaultfilters import date
 from unrest_comments.models import UnrestComment
 
-import json, string
-
 def ajax_login_required(function):
   def wrap(request,*args,**kwargs):
     if not request.user.is_authenticated():
@@ -26,7 +24,7 @@ def build_comment_json(comment):
     'comments': [build_comment_json(c) for c in children],
     'username': comment.user.username,
     'user_pk': comment.user_id,
-    'date_s': date(comment.submit_date,"l F j, Y @ P").replace("@","at"),
+    'date_s': date(comment.submit_date,"l F j, Y \a\t P"),
     'comment': comment.comment,
     'level': comment.level,
     'l_mod': comment.level%2,
