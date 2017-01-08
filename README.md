@@ -3,12 +3,7 @@ Django Riot Comments
 
 # VERY IMPORTANT
 
-This is a fork of django-mptt-comments that I want to turn into my own custom comment system. By the time I finish this it will not resemble django-mptt-comments in any way. I'm only doing this so that I can slowly merge my existing code into this. This repository is highly experimental and should be used by no one. That goes double for you, Tim.
-
-The story so far
---------
-
-I don't know how to rename apps under the new django admin system (please help!), so for now we're just going to call this app mptt_comments to avoid nasty, manual migrations on my previous apps. So far the only database changes is removing the title field.
+This is a fork of django-mptt-comments that I want to turn into my own custom comment system. By the time I finish this it will not resemble django-mptt-comments in any way. I amm only doing this so that I can slowly merge my existing code into this. This repository is highly experimental and should be used by no one. That goes double for you, Tim.
 
 #### Get the required third party modules
 
@@ -24,7 +19,21 @@ I don't know how to rename apps under the new django admin system (please help!)
 
 #### Configure your root urls.py
 
-    url(r'^comments/', include('unrest_comments.urls')),
+Connect the comments urls to your urls.py file. You will also need to define '/user.json' somewhere, which returns a json object with the id of the logged in user. For simplicity I have shown a minimum implementation (here defined in the actual urls.py file).
+
+    import unrest_comments.urls
+    
+    from django.http import JsonResponse
+    def user_json(request):
+      if not request.user.is_authenticated():
+        return JsonResponse({})
+      return JsonResponse({'user': {'id': request.user.id } })
+    
+    urlpatterns = [
+      # ...
+      url(r'^user.json$',user_json),
+      url(r'^comments/', include(unrest_comments.urls)),
+    ]
 
 #### Set COMMENTS_APP variable in the settings.py
 
@@ -34,11 +43,19 @@ I don't know how to rename apps under the new django admin system (please help!)
 
     <comment-list object_pk="{{ object.pk }}" content_type="course.course"></comment-list>
 
-#### Add `comments.tag`, `unrest.js`, and `riot.js` to your base template or only on the pages with comments (either way is fine)
+#### If you're not already using riot and unrest, just include `_comments_media.html` in your base template or any page that will display comments.
 
-    <script src="https://cdn.jsdelivr.net/riot/2.5/riot+compiler.min.js"></script>
-    <script src="{{ STATIC_URL }}unrest_comments/unrest.js"></script>
-    <script src="{{ STATIC_URL }}unrest_comments/comments.tag" type="riot/tag"></script>
+    {% include "_comments_media.html" %}
+
+Otherwise, pick and choose which of the following static fies you want. `unrest_comments.js` requires riot and unrest, but the stylesheet is completely optional.
+
+```html
+{% load static %}
+<script src="https://cdn.jsdelivr.net/riot/2.5/riot+compiler.min.js"></script>
+<script src="{% static "unrest_comments/.dist/unrest.js" %}"></script>
+<script src="{% static "unrest_comments/.dist/unrest_comments.js" %}"></script>
+<link href="{% static "unrest_comments/.dist/unrest_comments.css" %}" rel="stylesheet"/>
+```
 
 Riot will now load comments on the fly via ajax any where there is a comment-list tag with the two attributes. Rock on \m/
 

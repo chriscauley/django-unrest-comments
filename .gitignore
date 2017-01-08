@@ -1,5 +1,9 @@
 *.pyc
 *~
 
+# Node stuff
 unrest_comments/node_modules/*
-.e/*
+
+# files for the test app
+test_comments/.e/*
+test_comments/db.sqlite3

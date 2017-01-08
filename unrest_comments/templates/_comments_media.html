@@ -1,4 +1,5 @@
+{% load static %}
 <script src="https://cdn.jsdelivr.net/riot/2.5/riot+compiler.min.js"></script>
-<script src="{{ STATIC_URL }}unrest_comments/.dist/unrest.js"></script>
-<script src="{{ STATIC_URL }}unrest_comments/.dist/unrset_comments.js"></script>
-<link href="{{ STATIC_URL }}unrest_comments/.dist/unrest_comments.css" type="stylesheet"/>
+<script src="{% static "unrest_comments/.dist/unrest.js" %}"></script>
+<script src="{% static "unrest_comments/.dist/unrest_comments.js" %}"></script>
+<link href="{% static "unrest_comments/.dist/unrest_comments.css" %}" rel="stylesheet"/>
