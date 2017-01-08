@@ -9,7 +9,7 @@ var uglify = require('gulp-uglify');
 var util = require('gulp-util');
 
 var _ROOT = "static/unrest_comments/";
-var _DEST = "static/.dist/"
+var _DEST = "static/unrest_comments/.dist/"
 
 var source_files = [
   _DEST+"_tags.js",
