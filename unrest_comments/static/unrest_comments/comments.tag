@@ -70,8 +70,10 @@ uR.auth.ready(function() {
       <input id="id_object_pk" name="object_pk" type="hidden" value={ opts.object_pk } />
       <input id="id_parent_pk" name="parent_pk" type="hidden" value={ opts.parent_pk } />
       <input id="id_comment_pk" name="comment_pk" type="hidden" value={ opts.pk } />
-      <input type="submit" class="submit-post { uR.config.btn_success }" value="Post" onclick={ submit } />
-      <input type="submit" class="submit-post { uR.config.btn_cancel }" value="Cancel" onclick={ cancel } />
+      <div class="buttons">
+        <input type="submit" class="submit-post { uR.config.btn_success }" value="Post" onclick={ submit } />
+        <input type="submit" class="submit-post { uR.config.btn_cancel }" value="Cancel" onclick={ cancel } />
+      </div>
       </fieldset>
     </div>
   </form>
