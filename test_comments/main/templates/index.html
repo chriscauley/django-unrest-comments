@@ -1,0 +1,11 @@
+<html>
+<body>
+  {% for user in users %}
+  <div>
+    <h1>{{ user }}</h1>
+  </div>
+  <comment-list object_pk="{{ user.id }}" content_type="auth.user"></comment-list>
+  {% endfor %}
+</body>
+{% include "_comments_media.html" %}
+</html>
