@@ -15,7 +15,7 @@ uR.auth.ready(function() {
       <!--| <a onclick="commentFlag({ pk });return false;" title="flag" href="#"><i class="fa fa-flag"></i> Flag</a>-->
       <a if={ user_pk == uR.auth.user.id } onclick={ edit } title="reply"
          href="#"><i class="fa fa-pencil"></i> Edit</a>
-      <a if={ window._418 } href="/admin/mptt_comments/mpttcomment/{ pk }/delete/"><i class="fa fa-close"></i> Delete</a>
+      <a if={ window._418 } href="/admin/unrest_comments/unrestcomment/{ pk }/delete/"><i class="fa fa-close"></i> Delete</a>
     </div>
     <div if={ !uR.auth.user && uR.config.threaded_comments }>
       <a href="/accounts/login/?next={ window.location.pathname }">Login to reply to this comment</a>
