@@ -1,5 +1,6 @@
 *.pyc
 *~
+django_unrest_comments.egg-info/*
 
 # Node stuff
 unrest_comments/node_modules/*
