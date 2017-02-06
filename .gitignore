@@ -8,3 +8,4 @@ unrest_comments/node_modules/*
 # files for the test app
 test_comments/.e/*
 test_comments/db.sqlite3
+dist/*
