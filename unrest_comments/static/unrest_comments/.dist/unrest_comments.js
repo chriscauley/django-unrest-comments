@@ -2,7 +2,7 @@ uR.auth.ready(function() {
   riot.mount("comment-list");
 });
 
-riot.tag2('comment', '<div class="comment_meta"> <a href="javascript:;" onclick="{collapse}" class="expand-link"></a> <span class="commented_by">{username} - </span> <span class="commented_date">{date_s}</span> </div> <div class="comment_content">{comment}</div> <div class="comment_actions"> <div if="{uR.auth.user}"> <a onclick="{reply}" title="reply" if="{uR.config.threaded_comments}"><i class="fa fa-reply"></i> Post Reply</a> <a if="{user_pk == uR.auth.user.id}" onclick="{edit}" title="reply" href="#"><i class="fa fa-pencil"></i> Edit</a> <a if="{window._418}" href="/admin/unrest_comments/unrestcomment/{pk}/delete/"><i class="fa fa-close"></i> Delete</a> </div> <div if="{!uR.auth.user && uR.config.threaded_comments}"> <a href="/accounts/login/?next={window.location.pathname}">Login to reply to this comment</a> </div> </div> <div class="comment_form"></div> <div class="comment_children"> <comment each="{comments}"></comment> </div>', '', '', function(opts) {
+riot.tag2('comment', '<div class="comment_meta"> <a if="{uR.config.threaded_comments}" href="javascript:;" onclick="{collapse}" class="expand-link"></a> <span class="commented_by">{username} </span> <span class="commented_date">- {date_s}</span> </div> <div class="comment_content"></div> <div class="comment_actions"> <div if="{uR.auth.user}"> <a onclick="{reply}" title="reply" if="{uR.config.threaded_comments}"> <i class="fa fa-reply"></i> <span>Post Reply</span></a> <a if="{user_pk == uR.auth.user.id}" onclick="{edit}" title="reply" href="#"> <i class="fa fa-pencil"></i> <span>Edit</span></a> <a if="{window._418}" href="/admin/unrest_comments/unrestcomment/{pk}/delete/"> <i class="fa fa-close"></i> <span>Delete</span></a> </div> <div if="{!uR.auth.user && uR.config.threaded_comments}"> <a href="/accounts/login/?next={window.location.pathname}">Login to reply to this comment</a> </div> </div> <div class="comment_form"></div> <div class="comment_children"> <comment each="{comments}"></comment> </div>', '', '', function(opts) {
   var that = this;
   this.collapse = function(e) {
     $(e.target).closest('comment').toggleClass('collapsed');
@@ -33,8 +33,14 @@ riot.tag2('comment', '<div class="comment_meta"> <a href="javascript:;" onclick=
       "json"
     )
   }.bind(this)
-  that.root.className = "comment_level_{ level } l{ l_mod } comment_expanded";
+  this.on("mount",function() {
+    this.update();
+    this.root.querySelector(".comment_content").innerHTML = this.rendered;
+  });
+  that.root.className = "comment_level_{ level } l{ l_mod } comment_expanded u_{ username }";
   that.root.id = "c{ pk }";
+  if (uR._last_author == this.username) { that.root.classList.add("samezies"); }
+  uR._last_author = this.username;
 });
 
 riot.tag2('comment-form', '<form action="{opts.form_url}" method="POST" class="comment_form_wrapper" id="{opts.form_id}"> <div class="comment_form"> <md-help></md-help> <div class="{uR.config.form.field_class}"> <textarea cols="40" class="{uR.theme.input}" id="id_comment" name="comment" rows="10">{opts.comment}</textarea> <input id="id_content_type" name="content_type" type="hidden" riot-value="{opts.content_type}"> <input id="id_object_pk" name="object_pk" type="hidden" riot-value="{opts.object_pk}"> <input id="id_parent_pk" name="parent_pk" type="hidden" riot-value="{opts.parent_pk}"> <input id="id_comment_pk" name="comment_pk" type="hidden" riot-value="{opts.pk}"> <div class="buttons"> <input type="submit" class="submit-post {uR.config.btn_success}" value="Post" onclick="{submit}"> <input type="submit" class="submit-post {uR.config.btn_cancel}" value="Cancel" onclick="{cancel}"> </div> </fieldset> </div> </form>', '', '', function(opts) {
@@ -77,6 +83,9 @@ riot.tag2('comment-list', '<h4>Comments</h4> <div class="alert alert-danger repl
 
   var self = this;
   this.on("mount",function() {
+
+    if (!this.opts.content_type || !this.opts.object_pk) { this.unmount(true); return }
+
     uR.ajax({
       url: "/comments/list/",
       data: this.opts,
@@ -84,6 +93,7 @@ riot.tag2('comment-list', '<h4>Comments</h4> <div class="alert alert-danger repl
       success: function(data) {
         self.comments = data;
         self.form_url = "/comments/post/";
+        this.root.classList.add(uR.config.threaded_comments?"threaded":"chat");
       },
     });
   });

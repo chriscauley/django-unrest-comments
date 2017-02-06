@@ -4,18 +4,20 @@ uR.auth.ready(function() {
 
 <comment>
   <div class="comment_meta">
-    <a href="javascript:;" onclick={ collapse } class="expand-link"></a>
-    <span class="commented_by">{ username } - </span>
-    <span class="commented_date">{ date_s }</span>
+    <a if={ uR.config.threaded_comments } href="javascript:;" onclick={ collapse } class="expand-link"></a>
+    <span class="commented_by">{ username } </span>
+    <span class="commented_date">- { date_s }</span>
   </div>
-  <div class="comment_content">{ comment }</div>
+  <div class="comment_content"></div>
   <div class="comment_actions">
     <div if={ uR.auth.user}>
-      <a onclick={ reply } title="reply" if={ uR.config.threaded_comments }><i class="fa fa-reply"></i> Post Reply</a>
+      <a onclick={ reply } title="reply" if={ uR.config.threaded_comments }>
+        <i class="fa fa-reply"></i> <span>Post Reply</span></a>
       <!--| <a onclick="commentFlag({ pk });return false;" title="flag" href="#"><i class="fa fa-flag"></i> Flag</a>-->
-      <a if={ user_pk == uR.auth.user.id } onclick={ edit } title="reply"
-         href="#"><i class="fa fa-pencil"></i> Edit</a>
-      <a if={ window._418 } href="/admin/unrest_comments/unrestcomment/{ pk }/delete/"><i class="fa fa-close"></i> Delete</a>
+      <a if={ user_pk == uR.auth.user.id } onclick={ edit } title="reply"href="#">
+        <i class="fa fa-pencil"></i> <span>Edit</span></a>
+      <a if={ window._418 } href="/admin/unrest_comments/unrestcomment/{ pk }/delete/">
+        <i class="fa fa-close"></i> <span>Delete</span></a>
     </div>
     <div if={ !uR.auth.user && uR.config.threaded_comments }>
       <a href="/accounts/login/?next={ window.location.pathname }">Login to reply to this comment</a>
@@ -55,8 +57,14 @@ uR.auth.ready(function() {
       "json"
     )
   }
-  that.root.className = "comment_level_{ level } l{ l_mod } comment_expanded";
+  this.on("mount",function() {
+    this.update();
+    this.root.querySelector(".comment_content").innerHTML = this.rendered;
+  });
+  that.root.className = "comment_level_{ level } l{ l_mod } comment_expanded u_{ username }";
   that.root.id = "c{ pk }";
+  if (uR._last_author == this.username) { that.root.classList.add("samezies"); }
+  uR._last_author = this.username;
 </comment>
 
 <comment-form>
@@ -130,6 +138,9 @@ uR.auth.ready(function() {
 
   var self = this;
   this.on("mount",function() {
+    // Tag doesn't have necessary options to be mounted
+    if (!this.opts.content_type || !this.opts.object_pk) { this.unmount(true); return }
+
     uR.ajax({
       url: "/comments/list/",
       data: this.opts,
@@ -137,6 +148,7 @@ uR.auth.ready(function() {
       success: function(data) {
         self.comments = data;
         self.form_url = "/comments/post/";
+        this.root.classList.add(uR.config.threaded_comments?"threaded":"chat");
       },
     });
   });

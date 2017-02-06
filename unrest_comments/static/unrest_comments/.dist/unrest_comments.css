@@ -107,3 +107,27 @@ comment-form .md td,
 [riot-tag=comment-form] .md td {
   border-left: 1px gray solid;
 }
+comment-list.chat comment {
+  border: 0;
+  margin: 0;
+  background: transparent;
+  position: relative;
+}
+comment-list.chat comment.samezies .comment_meta {
+  display: none;
+}
+comment-list.chat comment .commented_date {
+  display: none;
+}
+comment-list.chat comment .comment_actions {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+comment-list.chat comment:hover .comment_actions {
+  display: block;
+}
+comment .emoji {
+  width: 1.5em;
+}

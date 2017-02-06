@@ -83,3 +83,23 @@ comment-form .md, [riot-tag=comment-form] .md {
   tr { border: 1px gray solid; border-left: 0; }
   td { border-left: 1px gray solid; }
 }
+
+comment-list.chat comment {
+  border: 0;
+  margin: 0;
+  background: transparent;
+  position: relative;
+  &.samezies .comment_meta { display: none; }
+  .commented_date { display: none; }
+  .comment_actions {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  &:hover .comment_actions { display: block; }
+}
+
+comment .emoji {
+  width: 1.5em;
+}
