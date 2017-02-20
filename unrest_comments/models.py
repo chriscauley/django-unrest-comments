@@ -5,14 +5,19 @@ from django.core import urlresolvers
 from mptt.models import MPTTModel
 
 from emoji.templatetags.emoji_tags import emoji_replace
-import datetime, markdown
+import datetime, markdown, re
+
+def render_comment(text):
+    return emoji_replace( # replace :emoji: with image tags
+        markdown.markdown(text, extensions=['unrest_comments.mdx_urlize'], safe_mode=True) #convert markdown to html
+    )
 
 class UnrestComment(MPTTModel, Comment):
     parent = models.ForeignKey('self', related_name='children', blank=True, null=True)
     rendered = models.TextField(null=True,blank=True)
 
     def save(self, *a, **kw):
-        self.rendered = emoji_replace(markdown.markdown(self.comment))
+        self.rendered = render_comment(self.comment)
         if not self.ip_address:
             self.ip_address = '0.0.0.0'
         super(UnrestComment, self).save(*a, **kw)
