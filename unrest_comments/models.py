@@ -9,7 +9,7 @@ import datetime, markdown, re
 
 def render_comment(text):
     return emoji_replace( # replace :emoji: with image tags
-        markdown.markdown(text, extensions=['unrest_comments.mdx_urlize'], safe_mode=True) #convert markdown to html
+        markdown.markdown(text, extensions=['lablackey.mdx_urlize'], safe_mode=True) #convert markdown to html
     )
 
 class UnrestComment(MPTTModel, Comment):
