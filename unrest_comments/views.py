@@ -26,7 +26,7 @@ def build_comment_json(comment):
     'comments': [build_comment_json(c) for c in children],
     'username': comment.user.username,
     'user_pk': comment.user_id,
-    'date_s': date(comment.submit_date,"l F j, Y \a\t P"),
+    'date_s': date(comment.submit_date,r"l F j, Y \a\t P"),
     'comment': comment.comment,
     'rendered': comment.rendered,
     'level': comment.level,
