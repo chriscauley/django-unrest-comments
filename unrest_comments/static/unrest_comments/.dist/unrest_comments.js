@@ -43,7 +43,7 @@ riot.tag2('comment', '<div class="comment_meta"> <a if="{uR.config.threaded_comm
   uR._last_author = this.username;
 });
 
-riot.tag2('comment-form', '<form action="{opts.form_url}" method="POST" class="comment_form_wrapper" id="{opts.form_id}"> <div class="comment_form"> <md-help></md-help> <div class="{uR.config.form.field_class}"> <textarea cols="40" class="{uR.theme.input}" id="id_comment" name="comment" rows="10">{opts.comment}</textarea> <input id="id_content_type" name="content_type" type="hidden" riot-value="{opts.content_type}"> <input id="id_object_pk" name="object_pk" type="hidden" riot-value="{opts.object_pk}"> <input id="id_parent_pk" name="parent_pk" type="hidden" riot-value="{opts.parent_pk}"> <input id="id_comment_pk" name="comment_pk" type="hidden" riot-value="{opts.pk}"> <div class="buttons"> <input type="submit" class="submit-post {uR.config.btn_success}" value="Post" onclick="{submit}"> <input type="submit" class="submit-post {uR.config.btn_cancel}" value="Cancel" onclick="{cancel}"> </div> </fieldset> </div> </form>', '', '', function(opts) {
+riot.tag2('comment-form', '<form action="{opts.form_url}" method="POST" class="comment_form_wrapper" id="{opts.form_id}"> <div class="comment_form"> <md-help></md-help> <div class="{uR.config.form.field_class}"> <textarea cols="40" class="{uR.theme.input}" id="id_comment" name="comment" rows="10">{opts.comment}</textarea> <input id="id_content_type" name="content_type" type="hidden" riot-value="{opts.content_type}"> <input id="id_object_pk" name="object_pk" type="hidden" riot-value="{opts.object_pk}"> <input id="id_parent_pk" name="parent_pk" type="hidden" riot-value="{opts.parent_pk}"> <input id="id_comment_pk" name="comment_pk" type="hidden" riot-value="{opts.pk}"> <div class="{uR.theme.error_class}" if="{error}">{error}</div> <div class="buttons"> <input type="submit" class="submit-post {uR.config.btn_success}" value="Post" onclick="{submit}"> <input type="submit" class="submit-post {uR.config.btn_cancel}" value="Cancel" onclick="{cancel}"> </div> </fieldset> </div> </form>', '', '', function(opts) {
   var self = this;
   self.parent = self.parent || self.opts.parent;
   this.cancel = function(e) {
@@ -51,6 +51,11 @@ riot.tag2('comment-form', '<form action="{opts.form_url}" method="POST" class="c
   }.bind(this)
   this.on("mount",function() { this.update() });
   this.submit = function(e) {
+    this.error = "";
+    if (!this.root.querySelector("[name=comment]").value.match(/\S/)) {
+      this.error = "Please enter a comment... something... ANYTHING!"
+      return;
+    }
     uR.ajax({
       url: this.opts.form_url,
       form: this.root.querySelector("form"),

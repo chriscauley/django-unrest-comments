@@ -78,6 +78,7 @@ uR.auth.ready(function() {
       <input id="id_object_pk" name="object_pk" type="hidden" value={ opts.object_pk } />
       <input id="id_parent_pk" name="parent_pk" type="hidden" value={ opts.parent_pk } />
       <input id="id_comment_pk" name="comment_pk" type="hidden" value={ opts.pk } />
+      <div class={ uR.theme.error_class } if={ error }>{ error }</div>
       <div class="buttons">
         <input type="submit" class="submit-post { uR.config.btn_success }" value="Post" onclick={ submit } />
         <input type="submit" class="submit-post { uR.config.btn_cancel }" value="Cancel" onclick={ cancel } />
@@ -92,6 +93,11 @@ uR.auth.ready(function() {
   }
   this.on("mount",function() { this.update() });
   submit(e) {
+    this.error = "";
+    if (!this.root.querySelector("[name=comment]").value.match(/\S/)) {
+      this.error = "Please enter a comment... something... ANYTHING!"
+      return;
+    }
     uR.ajax({
       url: this.opts.form_url,
       form: this.root.querySelector("form"),
