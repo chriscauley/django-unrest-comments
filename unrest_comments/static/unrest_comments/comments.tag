@@ -98,10 +98,9 @@ uR.auth.ready(function() {
       this.error = "Please enter a comment... something... ANYTHING!"
       return;
     }
-    uR.ajax({
+    this.ajax({
       url: this.opts.form_url,
       form: this.root.querySelector("form"),
-      that: this,
       success: function callback(data) {
         if (self.parent.pk == data.pk) { // editing a comment
           var comments = self.parent.parent.comments;
@@ -147,10 +146,9 @@ uR.auth.ready(function() {
     // Tag doesn't have necessary options to be mounted
     if (!this.opts.content_type || !this.opts.object_pk) { this.unmount(true); return }
 
-    uR.ajax({
+    this.ajax({
       url: "/comments/list/",
       data: this.opts,
-      that: this,
       success: function(data) {
         self.comments = data;
         self.form_url = "/comments/post/";

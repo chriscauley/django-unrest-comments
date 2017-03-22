@@ -56,10 +56,9 @@ riot.tag2('comment-form', '<form action="{opts.form_url}" method="POST" class="c
       this.error = "Please enter a comment... something... ANYTHING!"
       return;
     }
-    uR.ajax({
+    this.ajax({
       url: this.opts.form_url,
       form: this.root.querySelector("form"),
-      that: this,
       success: function callback(data) {
         if (self.parent.pk == data.pk) {
           var comments = self.parent.parent.comments;
@@ -91,10 +90,9 @@ riot.tag2('comment-list', '<h4>Comments</h4> <div class="alert alert-danger repl
 
     if (!this.opts.content_type || !this.opts.object_pk) { this.unmount(true); return }
 
-    uR.ajax({
+    this.ajax({
       url: "/comments/list/",
       data: this.opts,
-      that: this,
       success: function(data) {
         self.comments = data;
         self.form_url = "/comments/post/";
