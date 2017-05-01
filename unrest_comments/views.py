@@ -24,7 +24,7 @@ def build_comment_json(comment):
   return {
     'pk': comment.pk,
     'comments': [build_comment_json(c) for c in children],
-    'username': comment.user.username,
+    'username': comment.user.username if comment.user else None,
     'user_pk': comment.user_id,
     'date_s': date(comment.submit_date,r"l F j, Y \a\t P"),
     'comment': comment.comment,
