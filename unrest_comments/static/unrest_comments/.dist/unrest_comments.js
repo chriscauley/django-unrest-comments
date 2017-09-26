@@ -37,8 +37,8 @@ riot.tag2('comment', '<div class="comment_meta"> <a if="{uR.config.threaded_comm
     this.update();
     this.root.querySelector(".comment_content").innerHTML = this.rendered;
   });
-  that.root.className = "comment_level_{ level } l{ l_mod } comment_expanded u_{ username }";
-  that.root.id = "c{ pk }";
+  that.root.className = "comment_level_" + this.level + " l" + this.l_mod + " comment_expanded u_" + this.username;
+  that.root.id = "c" + this.pk;
   if (uR._last_author == this.username) { that.root.classList.add("samezies"); }
   uR._last_author = this.username;
 });
