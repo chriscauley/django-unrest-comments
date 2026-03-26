@@ -1,4 +1,4 @@
-from django.core import urlresolvers
+from django import urls
 from django.conf import settings
 from django_comments.signals import comment_was_posted
 from django.conf import settings
@@ -27,7 +27,7 @@ def get_form():
     return UnrestCommentForm
 
 def get_form_target():
-    return urlresolvers.reverse("unrest_comments.views.post_comment")
+    return urls.reverse("unrest_comments.views.post_comment")
 
 def comment_callback_for_notification(sender, request=None, comment=None, **kwargs):
     if not notification:

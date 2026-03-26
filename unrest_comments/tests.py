@@ -1,5 +1,5 @@
 from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from .models import UnrestComment, render_comment
 

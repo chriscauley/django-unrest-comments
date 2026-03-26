@@ -1,6 +1,6 @@
 from django.db import models
 from django_comments.models import Comment
-from django.core import urlresolvers
+from django import urls
 
 from mptt.models import MPTTModel
 
@@ -9,11 +9,11 @@ import datetime, markdown, re
 
 def render_comment(text):
     return emoji_replace( # replace :emoji: with image tags
-        markdown.markdown(text, extensions=['lablackey.mdx_urlize'], safe_mode=True) #convert markdown to html
+        markdown.markdown(text, extensions=['lablackey.mdx_urlize']) #convert markdown to html
     )
 
 class UnrestComment(MPTTModel, Comment):
-    parent = models.ForeignKey('self', related_name='children', blank=True, null=True)
+    parent = models.ForeignKey('self', related_name='children', blank=True, null=True, on_delete=models.SET_NULL)
     rendered = models.TextField(null=True,blank=True)
 
     def save(self, *a, **kw):
@@ -23,7 +23,7 @@ class UnrestComment(MPTTModel, Comment):
         super(UnrestComment, self).save(*a, **kw)
 
     def get_absolute_url(self):
-        tree_url = urlresolvers.reverse("comment-detail-tree", args=(self.tree_id, ))
+        tree_url = urls.reverse("comment-detail-tree", args=(self.tree_id, ))
         return "%s#c%s" % (tree_url, self.id)
 
     class Meta:

@@ -14,12 +14,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UnrestComment',
             fields=[
-                ('comment_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='django_comments.Comment')),
+                ('comment_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='django_comments.Comment', on_delete=models.CASCADE)),
                 ('lft', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('level', models.PositiveIntegerField(editable=False, db_index=True)),
-                ('parent', models.ForeignKey(related_name='children', blank=True, to='unrest_comments.UnrestComment', null=True)),
+                ('parent', models.ForeignKey(related_name='children', blank=True, to='unrest_comments.UnrestComment', null=True, on_delete=models.SET_NULL)),
             ],
             options={
                 'ordering': ('tree_id', 'lft'),
