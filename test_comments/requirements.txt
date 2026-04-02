@@ -1,4 +1,4 @@
-Django==1.10.5
+Django==2.2.24
 django-mptt==0.8.7
 django-contrib-comments
 lablackey
